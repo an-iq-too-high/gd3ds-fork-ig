@@ -8,4 +8,6 @@ Camila - Pathfinder Mod Physics
 
 ## NOTE
 
-*Note: this is just a fork of the GD3DS demake made by Alefunky, and is NOT the official one.*
+***P.S: this is just a fork of the GD3DS demake made by Alefunky, and is NOT the official one.***
+
+***P.P.S: if you know how to make .dump files work on 3DS and 3DS Emulators, then use these***
