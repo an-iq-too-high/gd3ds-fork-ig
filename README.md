@@ -44,7 +44,6 @@ Geometry Dash and its respective resources are by RobTop Games.
 - [ ] Cheat display
 
 ## Never happening
-
 - [ ] Level editor
 
 ## Additional Credits
