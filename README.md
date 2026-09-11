@@ -59,7 +59,7 @@ You can visit our Discord server and get support (or talk if you want to): [Disc
 
 # FAQ
 ### How do I install this on my 3DS?
-The current easiest way is to open the [Universal Updater](https://universal-team.net/projects/universal-updater) app on your 3DS and download the game from there. If you prefer doing it manually, download either the .3dsx or .cia file from the releases page and place it on your SD Card, then depending on which file you chose, launch it through the Homebrew Launcher, or install it to your home menu through FBI.
+The current easiest way is to open the [Universal Updater](https://universal-team.net/projects/universal-updater) app on your 3DS and download the game from there. If you prefer doing it manually, download either the [.3dsx](https://github.com/AleFunky/gd3ds/releases/latest) or .cia file from the releases page and place it on your SD Card, then depending on which file you chose, launch it through the Homebrew Launcher, or install it to your home menu through FBI.
 
 ### The game is saying something about "missing DSP firmware", what do I do?
 If you're playing on actual hardware this shouldn't be an issue as most 3DS homebrew tutorials dump this file in the process. If you're playing on an emulator, navigate to ```(your emulator's data folder)\sdmc\3ds\``` and create a file named ```dspfirm.cdc``` in said location. It can be completely empty for all the emulator cares, it just has to be present. In case you're running into this error on a real console, open the Luma menu (usually accessed by pressing ``L``, ``DPAD DOWN`` and ``SELECT`` at the same time), scroll to ``Miscellaneous options...`` and press ``Dump DSP firmware``.
