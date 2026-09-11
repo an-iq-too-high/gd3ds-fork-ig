@@ -72,6 +72,7 @@ no.
 ### Can you add X feature / X gamemode / X level?
 Everything that's planned to be implemented is listed in the planned features section above - in short, anything major from updates above 1.9 will not be added. However, if you come up with an improvement or a quality of life feature the game could use, you're welcome to suggest it in the Discord server.
 
-### Why not add 2.0 / 2.1 / 2.2 / whatever?
+### When 2.0 / 2.1 / 2.2 /??????????
+
 no.
 
