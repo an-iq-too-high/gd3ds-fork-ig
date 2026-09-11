@@ -42,7 +42,7 @@ Geometry Dash and its respective resources are by RobTop Games.
 - [ ] Gravity switch effect
 - [ ] Startpos switcher
 - [ ] Cheat display
-
+- [ ] Level editor
 ## Additional Credits
  - __camila314__ - Pathfinder Mod's physics
 
