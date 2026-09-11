@@ -73,4 +73,7 @@ Everything that's planned to be implemented is listed in the planned features se
 no. 
 
 
+
+
+
 this is a fork and is not the official one, only .cia and .elf are available cuz idk
