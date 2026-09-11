@@ -70,10 +70,4 @@ no.
 Everything that's planned to be implemented is listed in the planned features section above - in short, anything major from updates above 1.9 will not be added. However, if you come up with an improvement or a quality of life feature the game could use, you're welcome to suggest it in the Discord server.
 
 ### Why not add 2.0 / 2.1 / 2.2 / whatever?
-no. 
-
-
-
-
-
-this is a fork and is not the official one, only .cia and .elf are available cuz idk
+no.
