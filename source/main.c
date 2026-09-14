@@ -71,6 +71,8 @@
 #define CITRA_TYPE 0x20000
 #define CITRA_VERSION 11
 
+u32 __ctru_linear_heap_size = 36 << 20;
+
 int game_state = STATE_MAIN_MENU;
 
 bool playing_menu_loop = false;
@@ -547,6 +549,22 @@ static bool touch_jump_filter(u16 px, u16 py) {
     return !(on_pause_button || on_practice_ui);
 }
 
+static bool touch_left_half(u16 px) {
+    return px < SCREEN_BOT_WIDTH / 2;
+}
+
+static bool touch_jump_filter_p1(u16 px, u16 py) {
+    return touch_jump_filter(px, py) && touch_left_half(px);
+}
+
+static bool touch_jump_filter_p2(u16 px, u16 py) {
+    return touch_jump_filter(px, py) && !touch_left_half(px);
+}
+
+static bool touch_jump_filter_none(UNUSED u16 px, UNUSED u16 py) {
+    return false;
+}
+
 u32 jump_key_mask_p1(void) {
     return (settingsState.yJump ? KEY_Y : KEY_A);
 }
@@ -561,7 +579,7 @@ u32 jump_key_mask(void) {
 
 static void handle_gameplay_input(touchPosition touchPos, u32 kDown, u32 kHeld) {
     bool in_bounds = touch_jump_filter(touchPos.px, touchPos.py);
-    bool left_side = touchPos.px < SCREEN_BOT_WIDTH / 2;
+    bool left_side = touch_left_half(touchPos.px);
 
     bool touch_pressed = in_bounds && (kDown & KEY_TOUCH);
     bool touch_held = in_bounds && (kHeld & KEY_TOUCH);
@@ -602,8 +620,17 @@ static void handle_gameplay_input(touchPosition touchPos, u32 kDown, u32 kHeld) 
 }
 
 void sync_precise_input(bool suppress_held) {
-    pi_set_jump_keys(jump_key_mask());
-    pi_set_touch_filter(touch_jump_filter);
+    if (level_info.two_player_mode) {
+        pi_set_jump_keys(PI_PLAYER_1, jump_key_mask_p1());
+        pi_set_touch_filter(PI_PLAYER_1, touch_jump_filter_p1);
+        pi_set_jump_keys(PI_PLAYER_2, jump_key_mask_p2());
+        pi_set_touch_filter(PI_PLAYER_2, touch_jump_filter_p2);
+    } else {
+        pi_set_jump_keys(PI_PLAYER_1, jump_key_mask());
+        pi_set_touch_filter(PI_PLAYER_1, touch_jump_filter);
+        pi_set_jump_keys(PI_PLAYER_2, 0);
+        pi_set_touch_filter(PI_PLAYER_2, touch_jump_filter_none);
+    }
     pi_reset();
     if (suppress_held) {
         pi_suppress_until_release();
@@ -815,34 +842,21 @@ void game_loop() {
 
                     if (pi_enabled) {
                         pi_apply_substep((u32)steps);
-                        
+
+                        state.old_input = state.input;
+                        state.old_input_p2 = state.input_p2;
+
+                        state.input.pressedJump = pi_pressed(PI_PLAYER_1);
+                        state.input.holdJump = pi_hold(PI_PLAYER_1) || state.input.pressedJump;
+
                         if (level_info.two_player_mode) {
-                            state.old_input = state.input;
-                            state.old_input_p2 = state.old_input;
-
-                            state.input.pressedJump = pi_pressed();
-                            state.input.holdJump = pi_hold() || state.input.pressedJump;
-                            state.input_p2 = state.input;
-                            
-                            /* I TRIED
-                            state.input.pressedJump = (pi_pressed() & jump_key_mask_p1()) != 0;
-                            state.input.holdJump = ((pi_hold() & jump_key_mask_p1()) != 0) || state.input.pressedJump;
-                            
-                            state.old_input_p2 = state.input_p2;
-                            state.input_p2.pressedJump = (pi_pressed() & jump_key_mask_p2()) != 0;
-                            state.input_p2.holdJump = ((pi_hold() & jump_key_mask_p2()) != 0) || state.input_p2.pressedJump;
-                            */
+                            state.input_p2.pressedJump = pi_pressed(PI_PLAYER_2);
+                            state.input_p2.holdJump = pi_hold(PI_PLAYER_2) || state.input_p2.pressedJump;
                         } else {
-                            state.old_input = state.input;
-                            state.old_input_p2 = state.old_input;
-
-                            state.input.pressedJump = pi_pressed();
-                            state.input.holdJump = pi_hold() || state.input.pressedJump;
-
                             state.input_p2 = state.input;
                         }
-                        
-                        if (pi_pressed()){
+
+                        if (pi_pressed(PI_PLAYER_1) || pi_pressed(PI_PLAYER_2)) {
                             pi_substep_presses[steps < PI_SUBSTEP_BUCKETS ? steps : PI_SUBSTEP_BUCKETS - 1]++;
                         }
                     }
@@ -1357,8 +1371,23 @@ void game_assets_init() {
     glowSheet = C2D_SpriteSheetLoad("romfs:/gfx/glow.t3x");
     if (!glowSheet) svcBreak(USERBREAK_PANIC);
     
-    iconSheet = C2D_SpriteSheetLoad("romfs:/gfx/icons.t3x");
-    if (!iconSheet) svcBreak(USERBREAK_PANIC);
+    cube0Sheet = C2D_SpriteSheetLoad("romfs:/gfx/player_0.t3x");
+    if (!cube0Sheet) svcBreak(USERBREAK_PANIC);
+    
+    cube1Sheet = C2D_SpriteSheetLoad("romfs:/gfx/player_1.t3x");
+    if (!cube1Sheet) svcBreak(USERBREAK_PANIC);
+    
+    shipSheet = C2D_SpriteSheetLoad("romfs:/gfx/ship.t3x");
+    if (!shipSheet) svcBreak(USERBREAK_PANIC);
+    
+    ballSheet = C2D_SpriteSheetLoad("romfs:/gfx/player_ball.t3x");
+    if (!ballSheet) svcBreak(USERBREAK_PANIC);
+    
+    ufoSheet = C2D_SpriteSheetLoad("romfs:/gfx/bird.t3x");
+    if (!ufoSheet) svcBreak(USERBREAK_PANIC);
+    
+    waveSheet = C2D_SpriteSheetLoad("romfs:/gfx/dart.t3x");
+    if (!waveSheet) svcBreak(USERBREAK_PANIC);
 
     trailSheet = C2D_SpriteSheetLoad("romfs:/gfx/trails.t3x");
     if (!trailSheet) svcBreak(USERBREAK_PANIC);
@@ -1566,7 +1595,12 @@ int main(int argc, char* argv[]) {
     C2D_SpriteSheetFree(glowSheet);
     C2D_SpriteSheetFree(bgSheet);
     C2D_SpriteSheetFree(bg2Sheet);
-    C2D_SpriteSheetFree(iconSheet);
+    C2D_SpriteSheetFree(cube0Sheet);
+    C2D_SpriteSheetFree(cube1Sheet);
+    C2D_SpriteSheetFree(shipSheet);
+    C2D_SpriteSheetFree(ballSheet);
+    C2D_SpriteSheetFree(ufoSheet);
+    C2D_SpriteSheetFree(waveSheet);
     C2D_SpriteSheetFree(trailSheet);
     C2D_SpriteSheetFree(particleSheet);
     C2D_SpriteSheetFree(ui_sheet);

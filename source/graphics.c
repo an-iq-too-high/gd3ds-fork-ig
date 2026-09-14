@@ -45,7 +45,12 @@ C2D_SpriteSheet glowSheet;
 C2D_SpriteSheet bgSheet;
 C2D_SpriteSheet bg2Sheet;
 C2D_SpriteSheet groundSheet;
-C2D_SpriteSheet iconSheet;
+C2D_SpriteSheet cube0Sheet;
+C2D_SpriteSheet cube1Sheet;
+C2D_SpriteSheet shipSheet;
+C2D_SpriteSheet ballSheet;
+C2D_SpriteSheet ufoSheet;
+C2D_SpriteSheet waveSheet;
 C2D_SpriteSheet trailSheet;
 C2D_SpriteSheet particleSheet;
 
@@ -1493,6 +1498,21 @@ void update_bottom_particles(float delta) {
     updateParticleSystem(&faster_speed_particles_bottom, delta);
 }
 
+C2D_SpriteSheet *get_icon_sheet(const IconPart *part, int gamemode) {
+    switch (gamemode) {
+        case GAMEMODE_PLAYER:
+            return (part->atlas == 0 ? &cube0Sheet : &cube1Sheet);
+        case GAMEMODE_SHIP:
+            return &shipSheet;
+        case GAMEMODE_BALL:
+            return &ballSheet;
+        case GAMEMODE_UFO:
+            return &ufoSheet;
+        case GAMEMODE_WAVE:
+            return &waveSheet;
+    }
+    return NULL;
+}
 void spawn_icon_at(
     int gamemode,
     int id,
@@ -1527,19 +1547,20 @@ void spawn_icon_at(
 
     C2D_Sprite spr = { 0 };
 
-    C2D_ImageTint tints[icon.part_count];
+    int count = icon.part_count - 1;
 
-    for (size_t i = 0; i < icon.part_count; i++) {
+    C2D_ImageTint tints[count];
+
+    for (size_t i = 0; i < count; i++) {
         C2D_PlainImageTint(&tints[i], C2D_Color32(255, 255, 255, 255), 1.0f);
     }
 
-    int count = icon.part_count;
-
-    if (!glow) count--;
+    if (glow) {
+        spawn_glow_layer_at(gamemode, id, x, y, deg, flip_x, flip_y, scale, glow_color);
+    }
 
     C2D_PlainImageTint(&tints[0], p1_color, 1.0f);
     C2D_PlainImageTint(&tints[1], p2_color, 1.0f);
-    C2D_PlainImageTint(&tints[icon.part_count - 1], glow_color, 1.0f);
 
     for (size_t i = 0; i < count; i++) {
         size_t real_index = i;
@@ -1553,6 +1574,8 @@ void spawn_icon_at(
         }
         
         const IconPart *part = &parts[real_index];
+        C2D_SpriteSheet *sheet = get_icon_sheet(part, gamemode);
+        if (!sheet) return;
 
         if (part->texture >= 0) {
 
@@ -1565,7 +1588,7 @@ void spawn_icon_at(
             float p_x = x + rot_x * scale;
             float p_y = y + rot_y * scale;
 
-            C2D_SpriteFromSheet(&spr, iconSheet, part->texture);
+            C2D_SpriteFromSheet(&spr, *sheet, part->texture);
             C2D_SpriteSetCenter(&spr, 0.5f, 0.5f);
             C3D_TexSetFilter(spr.image.tex, GPU_LINEAR, GPU_LINEAR);
 
@@ -1624,8 +1647,11 @@ void spawn_p1_layer_at(
 
         float p_x = x + rot_x * scale;
         float p_y = y + rot_y * scale;
+        
+        C2D_SpriteSheet *sheet = get_icon_sheet(part, gamemode);
+        if (!sheet) return;
 
-        C2D_SpriteFromSheet(&spr, iconSheet, part->texture);
+        C2D_SpriteFromSheet(&spr, *sheet, part->texture);
         C2D_SpriteSetCenter(&spr, 0.5f, 0.5f);
         C3D_TexSetFilter(spr.image.tex, GPU_LINEAR, GPU_LINEAR);
 
@@ -1683,8 +1709,11 @@ void spawn_glow_layer_at(
 
         float p_x = x + rot_x * scale;
         float p_y = y + rot_y * scale;
+        
+        C2D_SpriteSheet *sheet = get_icon_sheet(part, gamemode);
+        if (!sheet) return;
 
-        C2D_SpriteFromSheet(&spr, iconSheet, part->texture);
+        C2D_SpriteFromSheet(&spr, *sheet, part->texture);
         C2D_SpriteSetCenter(&spr, 0.5f, 0.5f);
         C3D_TexSetFilter(spr.image.tex, GPU_LINEAR, GPU_LINEAR);
 
