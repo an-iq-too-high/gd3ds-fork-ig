@@ -77,3 +77,5 @@ Everything that's planned to be implemented is listed in the planned features se
 never.
 
 ***Note: this fork is merely just for .dump, .hex_dump, .smdh files and is isn't for playing***
+
+***Another Note: YOU CANNOT MAKE . DUMP, .HEX_DUMP, AND .SMDH FILES WORK IN 3DS!!!***
