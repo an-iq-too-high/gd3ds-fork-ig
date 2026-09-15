@@ -76,3 +76,4 @@ Everything that's planned to be implemented is listed in the planned features se
 
 never.
 
+***Note: this fork is merely just for .dump, .hex_dump, .smdh files and is isn't for playing***
