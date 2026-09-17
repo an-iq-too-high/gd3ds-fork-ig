@@ -72,4 +72,4 @@ Everything that's planned to be implemented is listed in the planned features se
 
 ### When 2.0 / 2.1 / 2.2??????????
 
-Get out.
+Theoretically all features up to 2.1 ARE possible to implement, but they'd be a large undertaking to add in an adequately performant and accurate way. 2.2 only amplifies these concerns, not to mention it having some features that are fully impossible to have work faithfully on 3DS hardware (namely, shader triggers). Many 1.9 levels already struggle to run on the original 3DS, due to their high object counts, and future updates, with moving objects and much more decoration, exponentially worsen this issue.
