@@ -1,6 +1,6 @@
 # Goemetry Dash for the 3DS
 
-This is a demake of the popular mobile game ***Geometry Dash*** for the ***Nintendo 3DS***.
+This is a demake of the popular mobile game **Geometry Dash** for the **Nintendo 3DS**.
 
 Geometry Dash and its respective resources are by RobTop Games.
 <img width="1460" height="480" alt="Main Menu" src="https://github.com/user-attachments/assets/d802266b-2eb9-4115-870c-0073ed5a50ff" />
