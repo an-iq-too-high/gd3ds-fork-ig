@@ -30,9 +30,9 @@ Geometry Dash and its respective resources are by RobTop Games.
 - [x] Various in-game visual effects and UI animations
 - [x] Auto-Checkpoints
 - [x] Better bottom screen HUD
-- [x] Online support (latest nightly)
+- [ ] Online Support
 - [ ] Start position support
-- [ ] Mods
+
 ## Features that aren't planned but may be added either way
 - [ ] Achievements
 - [ ] Touchscreen-less navigation options
@@ -42,9 +42,6 @@ Geometry Dash and its respective resources are by RobTop Games.
 - [ ] Gravity switch effect
 - [ ] Startpos switcher
 - [ ] Cheat display
-
-## Never happening
-- [ ] Level editor
 
 ## Additional Credits
  - __camila314__ - Pathfinder Mod's physics
