@@ -1,4 +1,4 @@
-# Goemetry Dash for the 3DS
+# Geometry Dash for the 3DS
 
 This is a demake of the popular mobile game **Geometry Dash** for the **Nintendo 3DS**.
 
